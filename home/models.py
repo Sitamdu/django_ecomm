@@ -83,3 +83,17 @@ class ProductImage(models.Model):
 
     def __str__(self):
         return self.product.name
+
+class ProductReview(models.Model):
+    username = models.CharField(max_length=300)
+    email = models.EmailField(max_length=200)
+    comment = models.TextField()
+    star = models.IntegerField()
+    date = models.CharField(max_length=100)
+    slug = models.TextField(default='product')
+
+
+    def __str__(self):
+        return self.username
+
+

@@ -54,7 +54,23 @@
                     <div class="collapse navbar-collapse justify-content-between" id="navbarCollapse">
                         <div class="navbar-nav mr-auto">
                             <a href="/" class="nav-item nav-link active">Home</a>
+                            <a href="/contacts" class="nav-item nav-link active">Contact</a>
                         </div>
+
+<!--                        {% for cat in categories %}-->
+<!--                        <div class="navbar-nav ml-auto">-->
+<!--                            <div class="nav-item dropdown">-->
+<!--                                <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">{{cat.name}}</a>-->
+<!--                                <div class="dropdown-menu">-->
+<!--                                    {% for subcat in subcategories %}-->
+<!--                                    {% if cat.id == subcat.category_id %}-->
+<!--                                    <a href="/accounts/logout" class="dropdown-item">{{subcat.name}}</a>-->
+<!--                                    {% endif %}-->
+<!--                                    {% endfor %}-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                    </div>-->
+<!--                        {% endfor %}-->
                         <div class="navbar-nav ml-auto">
                             <div class="nav-item dropdown">
                                 {% if user.is_authenticated %}
@@ -71,6 +87,7 @@
                         </div>
                             {% endif %}
                     </div>
+                    </div>
                 </nav>
             </div>
         </div>
@@ -82,7 +99,7 @@
                 <div class="row align-items-center">
                     <div class="col-md-3">
                         <div class="logo">
-                            <a href="index.html">
+                            <a href="/">
                                 <img src="{% static 'img/logo1.png' %}" alt="Logo">
                             </a>
                         </div>
@@ -97,13 +114,21 @@
                     </div>
                     <div class="col-md-3">
                         <div class="user">
-                            <a href="wishlist.html" class="btn wishlist">
+                            <a href="/wish_list" class="btn wishlist">
                                 <i class="fa fa-heart"></i>
+                                {% if user.is_authenticated %}
+                                <span>({{wish_count}})</span>
+                                {% else %}
                                 <span>(0)</span>
+                                {% endif %}
                             </a>
                             <a href="/my_cart" class="btn cart">
                                 <i class="fa fa-shopping-cart"></i>
+                                {% if user.is_authenticated %}
+                                <span>({{counts}})</span>
+                                {% else %}
                                 <span>(0)</span>
+                                {% endif %}
                             </a>
                         </div>
                     </div>
@@ -124,11 +149,13 @@
                     <div class="col-lg-3 col-md-6">
                         <div class="footer-widget">
                             <h2>Get in Touch</h2>
+                            {% for info in infos %}
                             <div class="contact-info">
-                                <p><i class="fa fa-map-marker"></i>123 E Store, Los Angeles, USA</p>
-                                <p><i class="fa fa-envelope"></i>email@example.com</p>
-                                <p><i class="fa fa-phone"></i>+123-456-7890</p>
+                                <p><i class="fa fa-map-marker"></i>{{info.address}}</p>
+                                <p><i class="fa fa-envelope"></i>{{info.email}}</p>
+                                <p><i class="fa fa-phone"></i>{{info.phone}}</p>
                             </div>
+                            {% endfor %}
                         </div>
                     </div>
 

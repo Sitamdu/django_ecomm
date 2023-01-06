@@ -107,3 +107,28 @@ class Cart(models.Model):
     def __str__(self):
         return self.username
 
+
+class Wish(models.Model):
+    username = models.CharField(max_length=200)
+    slug = models.TextField()
+    items = models.ForeignKey(Product, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.username
+
+class Contact(models.Model):
+    name = models.CharField(max_length=200)
+    email = models.EmailField(max_length=200)
+    subject = models.CharField(max_length=200)
+    message = models.TextField(blank=True)
+
+    def __str__(self):
+        return self.name
+
+class Inforamtion(models.Model):
+    address = models.CharField(max_length=100)
+    email = models.EmailField(max_length = 200)
+    phone = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.address

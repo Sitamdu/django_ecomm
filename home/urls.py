@@ -14,6 +14,12 @@ urlpatterns = [
     path('my_cart', CartView.as_view(), name = 'my_cart'),
     path('reduce_quantity/<slug>', decrease_quantity, name = 'reduce_cart'),
     path('delete_cart/<slug>', delete_cart, name = 'delete_cart'),
+    path('wish/<slug>', wish, name = 'wish'),
+    path('wish_list', WishListView.as_view(), name = 'wish_list'),
+    path('delete_wish/<slug>', delete_wish, name = 'delete_wish'),
+    # path('contacts',ContactView.as_view(), name = 'contacts'),
+    path('contacts', contact, name = 'contacts')
+
 
 
 

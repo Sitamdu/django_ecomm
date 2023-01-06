@@ -11,6 +11,7 @@ import datetime
 class BaseView(View):
     views = {}
     views['categories'] = Category.objects.all()
+    views['subcategories'] = SubCategory.objects.all()
     views['brands'] = Brand.objects.all()
     views['sale_products'] = Product.objects.filter(label='sale', stock='In stock')
 
@@ -20,6 +21,7 @@ class HomeView(BaseView):
         self.views
         self.views['sliders'] = Slider.objects.all()
         self.views['ads'] = Ad.objects.all()
+        self.views['infos'] = Inforamtion.objects.all()
         self.views['feedbacks'] = Feedback.objects.all()
         self.views['new_products'] = Product.objects.filter(label = 'new',stock = 'In stock')
         self.views['hot_products'] = Product.objects.filter(label = 'hot',stock = 'In stock')
@@ -124,7 +126,9 @@ def product_review(request,slug):
         data.save()
     return redirect(f"/details/{slug}")
 
+from django.contrib.auth.decorators import login_required
 
+@login_required
 def cart(request,slug):
     username = request.user.username
     if Cart.objects.filter(slug = slug,username = username, checkout = False).exists():
@@ -186,15 +190,60 @@ class CartView(BaseView):
     def get(self,request):
         grand_total = 0
         username = request.user.username
-        self.views['my_carts'] = Cart.objects.filter(username = username, checkout = False )
+        self.views['my_carts'] = Cart.objects.filter(username = username, checkout = False)
         for i in self.views['my_carts']:
             grand_total = grand_total + i.total
         self.views['all_total'] = grand_total
         self.views['shipping'] = 50
         self.views['grand_total'] = grand_total + 50
+        self.views['counts'] = Cart.objects.filter(username = username, checkout = False).count()
         return render(request,'cart.html',self.views)
 
 
+
+def wish(request,slug):
+    username = request.user.username
+    Wish.objects.filter(slug=slug, username=username)
+    data = Wish.objects.create(
+        username=username,
+        slug=slug,
+        items=Product.objects.filter(slug=slug)[0]
+    )
+    data.save()
+    return redirect('/wish_list')
+
+
+def delete_wish(request,slug):
+    username = request.user.username
+    Wish.objects.filter(slug=slug, username=username).delete()
+    messages.error(request, 'The wishlist is removed!')
+    return redirect('/wish_list')
+
+class WishListView(BaseView):
+    def get(self,request):
+        username = request.user.username
+        self.views['my_wish'] = Wish.objects.filter(username=username)
+        self.views['wish_count'] = Wish.objects.filter(username=username).count()
+        return render(request,'wishlist.html',self.views)
+
+def contact(request):
+    views = {}
+    if request.method == 'POST':
+        name = request.POST['name']
+        email = request.POST['email']
+        subject = request.POST['subject']
+        message = request.POST['message']
+        data = Contact.objects.create(
+            name = name,
+            email = email,
+            subject = subject,
+            message = message
+        )
+        data.save()
+        views['mess'] ='The message is submitted!'
+        return render(request, 'contact.html',views)
+
+    return render(request, 'contact.html',views)
 
 # def home(request):
 #     return render(request, 'index.html')

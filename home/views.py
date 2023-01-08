@@ -226,6 +226,10 @@ class WishListView(BaseView):
         self.views['wish_count'] = Wish.objects.filter(username=username).count()
         return render(request,'wishlist.html',self.views)
 
+
+
+from django.core.mail import send_mail
+from django.conf import settings
 def contact(request):
     views = {}
     if request.method == 'POST':
@@ -240,10 +244,20 @@ def contact(request):
             message = message
         )
         data.save()
+
+        subject = 'Thank you for messaging to our site'
+        message = ' We received your message and it  means a world to us '
+        email_from = settings.EMAIL_HOST_USER
+        recipient_list = ['beekramrai22@gmail.com']
+        send_mail(subject, message, email_from, recipient_list)
+
         views['mess'] ='The message is submitted!'
         return render(request, 'contact.html',views)
 
     return render(request, 'contact.html',views)
+
+
+
 
 # def home(request):
 #     return render(request, 'index.html')
